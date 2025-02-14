@@ -10,7 +10,7 @@
 </head>
 <body class="container-xxl">
 <div class="col-12 col-md-auto">
-<div id="menu" class="ps-lg-4">
+<div id="menu" class="ps-lg-4 m-3">
   <button class="btn btn-outline-primary btn-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit"
           aria-expanded="false" aria-controls="collapseEdit">
     Edit Race
@@ -134,7 +134,9 @@
       racerContainer.style.position = "absolute";
       racerContainer.style.left = "0px";
       // evently space the racers across raceTrack.style.height
-      racerContainer.style.top = `${(index + 1) * ((raceTrack.clientHeight - 60) / (participants.length + 1))}px`;
+      let racerSpacing = (raceTrack.clientHeight - 140) / (participants.length + 1);
+      let racerHeight = Math.max(racerSpacing, 120);
+      racerContainer.style.top = `${(index + 1) * racerSpacing}px`;
       racerContainer.style.display = "flex";
       racerContainer.style.flexDirection = "column";
       racerContainer.style.alignItems = "left";
@@ -152,8 +154,8 @@
       const racer = document.createElement("img");
       racer.src = "https://cdn-icons-png.flaticon.com/512/3205/3205282.png";
       racer.alt = name;
-      racer.style.width = "40px";
-      racer.style.height = "40px";
+      racer.style.width = `${racerHeight}px`;
+      racer.style.height = `${racerHeight}px`;
       racerContainer.appendChild(nameBubble);
       racerContainer.appendChild(racer);
       raceTrack.appendChild(racerContainer);
@@ -165,7 +167,7 @@
         position: 0,
         speed: 0,
         bounce: 0,
-        yoffset: (index + 1) * ((raceTrack.clientHeight - 60) / (participants.length + 1))
+        yoffset: (index + 1) * racerSpacing
       };
     });
 
