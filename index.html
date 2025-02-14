@@ -1,0 +1,210 @@
+<html lang="en" data-bs-theme="dark">
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+
+</head>
+<body>
+<!--particpants input box-->
+<div style="width: 80vw; margin-left: auto; margin-right: auto" id="main" class="container">
+  <div id="menu">
+    <button class="btn btn-outline-primary m-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit"
+            aria-expanded="false" aria-controls="collapseEdit">
+      Edit Race
+    </button>
+  </div>
+  <div class="collapse" id="collapseEdit">
+    <div class="card card-body">
+      <div class="container">
+        <div class="row align-items-start">
+          <div class="col">
+            <label>Speed</label>
+            <input type="range" class="form-range" id="raceSpeed" min="1" max="10" step="1" value="5">
+            <label>Background Image</label>
+            <input type="text" class="form-control" id="backgroundImage" value="" onchange="newRace()">
+          </div>
+          <div class="col">
+            <label>Participants</label>
+            <textarea id="participants" class="form-control" aria-label="Participants" onchange="newRace()"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="winnerModal" tabindex="-1" aria-labelledby="winnerModalLabel" aria-hidden="true" style="margin-top: 10%">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="winnerModalLabel">Winner</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="newRace()"></button>
+        </div>
+        <h2 class="modal-body" id="winnerBody" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+          ...
+        </h2>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="newRace()">Reset</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="removeWinnerFromParticipants()">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+  const jsConfetti = new JSConfetti()
+  const winnerModal = new bootstrap.Modal(document.getElementById('winnerModal'));
+  loadFieldValues();
+  newRace();
+
+  function saveFieldValues() {
+    let participants = document.getElementById("participants").value;
+    let raceSpeed = document.getElementById("raceSpeed").value;
+    let backgroundImage = document.getElementById("backgroundImage").value;
+    localStorage.setItem("participants", participants);
+    localStorage.setItem("raceSpeed", raceSpeed);
+    localStorage.setItem("backgroundImage", backgroundImage);
+  }
+
+    function loadFieldValues() {
+        let participants = localStorage.getItem("participants");
+        let raceSpeed = localStorage.getItem("raceSpeed");
+        let backgroundImage = localStorage.getItem("backgroundImage");
+        if (participants) {
+        document.getElementById("participants").value = participants;
+        }
+        if (raceSpeed) {
+        document.getElementById("raceSpeed").value = raceSpeed;
+        }
+        if (backgroundImage) {
+        document.getElementById("backgroundImage").value = backgroundImage;
+        }
+    }
+
+  function removeWinnerFromParticipants() {
+    let participants = document.getElementById("participants");
+    let winner = document.getElementById("winnerBody").innerText;
+    let newParticipants = participants.value.split("\n").map(line => line.trim()).filter(
+        line => line.length > 0 && line !== winner);
+    participants.value = newParticipants.join("\n");
+    newRace();
+  }
+
+  function newRace() {
+    saveFieldValues();
+    deleteRace();
+    showRace();
+  }
+
+  function showRace() {
+
+    const participants = document.getElementById("participants").value.split("\n").map(line => line.trim()).filter(
+        line => line.length > 0);
+    const raceTrack = document.createElement("div");
+    raceTrack.style.position = "relative";
+    raceTrack.style.width = "100%";
+    raceTrack.style.height = "80vh";
+    raceTrack.style.border = "1px solid black";
+
+    raceTrack.id = "raceTrack";
+    // light brown
+    raceTrack.style.backgroundColor = "rgb(27, 31, 34)";
+    if (document.getElementById("backgroundImage").value) {
+      raceTrack.style.backgroundImage = `url(${document.getElementById("backgroundImage").value})`;
+      raceTrack.style.backgroundSize = "cover";
+      raceTrack.style.backgroundPosition = "center";
+    }
+    document.getElementById("main").appendChild(raceTrack);
+
+    let winner = null;
+    let interval;
+    const racers = participants.map((name, index) => {
+      const racerContainer = document.createElement("div");
+      racerContainer.style.position = "absolute";
+      racerContainer.style.left = "0px";
+      // evently space the racers across raceTrack.style.height
+      racerContainer.style.top = `${(index + 1) * ((raceTrack.clientHeight - 60) / (participants.length + 1))}px`;
+      racerContainer.style.display = "flex";
+      racerContainer.style.flexDirection = "column";
+      racerContainer.style.alignItems = "left";
+
+      const nameBubble = document.createElement("div");
+      nameBubble.innerText = name;
+      nameBubble.className = "badge";
+      nameBubble.style.textAlign = "right";
+      nameBubble.style.display = "block";
+      nameBubble.style.marginTop = "4px";
+      // random color
+      nameBubble.style.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      const racer = document.createElement("img");
+      racer.src = "https://cdn-icons-png.flaticon.com/512/3205/3205282.png";
+      racer.alt = name;
+      racer.style.width = "40px";
+      racer.style.height = "40px";
+      racerContainer.appendChild(nameBubble);
+      racerContainer.appendChild(racer);
+      raceTrack.appendChild(racerContainer);
+
+      return {
+        name,
+        element: racerContainer,
+        position: 0,
+        speed: 0,
+        bounce: 0,
+        yoffset: (index + 1) * ((raceTrack.clientHeight - 60) / (participants.length + 1))
+      };
+    });
+
+    function startRace() {
+      startButton.remove();
+      interval = setInterval(() => {
+        racers.forEach(racer => {
+
+          // add random speed between -1 and 2
+          racer.speed += (Math.random() * 2 - 1);
+          // clamp speed between 1 and 10
+          racer.speed = Math.max(0.1, Math.min(racer.speed, 4));
+          racer.position += racer.speed * 0.5 * (document.getElementById("raceSpeed").value / 5);
+          racer.element.style.left = `${racer.position}px`;
+          racer.element.style.top = `${(racer.yoffset + racer.bounce)}px`;
+          racer.bounce = Math.max(Math.sin(racer.position / 5) * racer.speed / 5);
+          racer.element.style.filter = `drop-shadow(0px ${racer.bounce / 2}px 4px rgba(0, 0, 0, 1))`;
+          if (!winner) {
+            if (racer.position >= raceTrack.clientWidth - 30) {
+              winner = racer.name;
+              let winnerBody = document.getElementById("winnerBody");
+              winnerBody.innerText = `${winner}`;
+              winnerModal.toggle();
+              jsConfetti.addConfetti()
+            }
+          }
+        });
+      }, 10);
+    }
+
+    const startButton = document.createElement("button");
+    startButton.innerText = "Start Race";
+    startButton.className = "btn btn-outline-success m-2";
+    startButton.id = "startButton";
+    startButton.onclick = startRace;
+    document.getElementById("menu").appendChild(startButton);
+  }
+
+  function deleteRace() {
+    let oldRace = document.getElementById("raceTrack");
+    if (oldRace) {
+      oldRace.remove();
+    }
+    let oldStartButton = document.getElementById("startButton");
+    if (oldStartButton) {
+      oldStartButton.remove();
+    }
+  }
+</script>
+<!--add credit here-->
+<footer class="text-center">
+  <br>
+  <p>Created by <a href="https://github.com/madgetr">Trevor Madge</a></p>
+</footer>
+</html>
