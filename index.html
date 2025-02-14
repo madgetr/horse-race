@@ -8,35 +8,41 @@
           crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
 </head>
-<body class="container-xxl">
-<div class="col-12 col-md-auto">
-<div id="menu" class="ps-lg-4 m-3">
-  <button class="btn btn-outline-primary btn-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit"
-          aria-expanded="false" aria-controls="collapseEdit">
-    Edit Race
-  </button>
-</div>
-</div>
-<!--particpants input box-->
-<div class="collapse" id="collapseEdit">
-  <div class="card card-body">
-    <div class="container">
-      <div class="row align-items-start">
-        <div class="col">
-          <label for="raceSpeed">Speed</label><input type="range" class="form-range" id="raceSpeed" min="1" max="10"
-                                                     step="1" value="5">
-          <label for="backgroundImage">Background Image</label><input type="text" class="form-control"
-                                                                      id="backgroundImage" value=""
-                                                                      onchange="newRace()">
-        </div>
-        <div class="col">
-          <label>Participants</label>
-          <textarea id="participants" class="form-control" rows="3" aria-label="Participants" onchange="newRace()"></textarea>
+<body class="container-xxl my-md-4 bd-layout">
+<nav class="bd-subnavbar py-2" aria-label="Secondary navigation">
+  <div class="container-xxl d-flex align-items-md-center" id="menu">
+    <button class="btn btn-outline-primary btn-lg fs-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit"
+            aria-expanded="false" aria-controls="collapseEdit">
+      Edit Race
+    </button>
+
+  </div>
+  <!--particpants input box-->
+  <div class="collapse" id="collapseEdit">
+    <div class="card card-body">
+      <div class="container">
+        <div class="row align-items-start">
+          <div class="col">
+            <label for="raceSpeed">Speed</label><input type="range" class="form-range" id="raceSpeed" min="1" max="10"
+                                                       step="1" value="5">
+            <label for="backgroundImage">Background Image</label><input type="text" class="form-control"
+                                                                        id="backgroundImage" value=""
+                                                                        onchange="newRace()">
+            <label for="racerImage">Racer Image</label><input type="text" class="form-control"
+                                                                        id="racerImage" value=""
+                                                                        onchange="newRace()">
+          </div>
+          <div class="col">
+            <label for="raceTitle">Title</label><input type="text" class="form-control" id="raceTitle">
+            <label>Participants</label>
+            <textarea id="participants" class="form-control" rows="3" aria-label="Participants" onchange="newRace()"></textarea>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</nav>
+<main class="bd-main order-1">
 <div style="margin-left: auto; margin-right: auto; margin-top: 50px" id="main" class="container-fluid mb-3">
   <!-- Modal -->
   <div class="modal fade" id="winnerModal" tabindex="-1" aria-labelledby="winnerModalLabel" aria-hidden="true"
@@ -45,15 +51,15 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="winnerModalLabel">Winner</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+          <button type="button" class="btn-close fs-3" data-bs-dismiss="modal" aria-label="Close"
                   onclick="newRace()"></button>
         </div>
         <h2 class="modal-body" id="winnerBody" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
           ...
         </h2>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="newRace()">Reset</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+          <button type="button" class="btn btn-secondary fs-3" data-bs-dismiss="modal" onclick="newRace()">Reset</button>
+          <button type="button" class="btn btn-primary fs-3" data-bs-dismiss="modal"
                   onclick="removeWinnerFromParticipants()">Remove
           </button>
         </div>
@@ -61,6 +67,7 @@
     </div>
   </div>
 </div>
+</main>
 </body>
 <script>
   const jsConfetti = new JSConfetti()
@@ -72,15 +79,18 @@
     let participants = document.getElementById("participants").value;
     let raceSpeed = document.getElementById("raceSpeed").value;
     let backgroundImage = document.getElementById("backgroundImage").value;
+    let racerImage = document.getElementById("racerImage").value;
     localStorage.setItem("participants", participants);
     localStorage.setItem("raceSpeed", raceSpeed);
     localStorage.setItem("backgroundImage", backgroundImage);
+    localStorage.setItem("racerImage", racerImage);
   }
 
   function loadFieldValues() {
     let participants = localStorage.getItem("participants");
     let raceSpeed = localStorage.getItem("raceSpeed");
     let backgroundImage = localStorage.getItem("backgroundImage");
+    let racerImage = localStorage.getItem("racerImage");
     if (participants) {
       document.getElementById("participants").value = participants;
     }
@@ -89,6 +99,9 @@
     }
     if (backgroundImage) {
       document.getElementById("backgroundImage").value = backgroundImage;
+    }
+    if (racerImage) {
+      document.getElementById("racerImage").value = racerImage;
     }
   }
 
@@ -112,6 +125,10 @@
     const participants = document.getElementById("participants").value.split("\n").map(line => line.trim()).filter(
         line => line.length > 0);
     const raceTrack = document.createElement("div");
+    let racerImage = document.getElementById("racerImage").value;
+    if (!racerImage) {
+      racerImage = "https://cdn-icons-png.flaticon.com/512/3205/3205282.png";
+    }
     raceTrack.style.position = "relative";
     raceTrack.style.width = "100%";
     raceTrack.style.height = "80vh";
@@ -144,7 +161,7 @@
 
       const nameBubble = document.createElement("div");
       nameBubble.innerText = name;
-      nameBubble.className = "badge";
+      nameBubble.className = "";
       nameBubble.style.textAlign = "right";
       // hide text if it's too close to the edge
       nameBubble.style.overflow = "hidden";
@@ -152,7 +169,7 @@
       // random color
       nameBubble.style.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
       const racer = document.createElement("img");
-      racer.src = "https://cdn-icons-png.flaticon.com/512/3205/3205282.png";
+      racer.src = racerImage;
       racer.alt = name;
       racer.style.width = `${racerHeight}px`;
       racer.style.height = `${racerHeight}px`;
@@ -186,8 +203,8 @@
           racer.position += racer.speed * 0.5 * (document.getElementById("raceSpeed").value / 5);
           racer.element.style.left = `${racer.position}px`;
           racer.element.style.top = `${(racer.yoffset + racer.bounce)}px`;
-          racer.bounce = Math.max(Math.sin(racer.position / 5) * racer.speed / 5);
-          racer.element.style.filter = `drop-shadow(0px ${racer.bounce / 2}px 4px rgba(0, 0, 0, 1))`;
+          racer.bounce = Math.max(Math.sin(racer.position / 10) * racer.speed / 5) * 10;
+          racer.element.style.filter = `drop-shadow(0px 2px 4px rgba(0, 0, 0, 1))`;
           if (!winner) {
             if (racer.position >= raceTrack.clientWidth - 30) {
               winner = racer.name;
@@ -203,7 +220,7 @@
 
     const startButton = document.createElement("button");
     startButton.innerText = "Start Race";
-    startButton.className = "btn btn-outline-success btn-lg";
+    startButton.className = "btn btn-outline-success btn-lg fs-3";
     startButton.id = "startButton";
     startButton.onclick = startRace;
     document.getElementById("menu").appendChild(startButton);
