@@ -256,13 +256,13 @@ Name2
       racerContainer.style.top = `${(index + 1) * racerSpacing}px`;
       racerContainer.style.display = "flex";
       racerContainer.style.flexDirection = "column";
-      racerContainer.style.alignItems = "left";
+      racerContainer.style.alignItems = "right";
       racerContainer.style.overflow = "hidden";
 
       const nameBubble = document.createElement("div");
       nameBubble.innerText = name;
-      nameBubble.className = "";
-      nameBubble.style.textAlign = "right";
+      nameBubble.style.position = "absolute";
+      nameBubble.style.width = "200px";
       // hide text if it's too close to the edge
       nameBubble.style.overflow = "hidden";
       nameBubble.style.marginTop = "4px";
@@ -273,6 +273,7 @@ Name2
       racer.alt = name;
       racer.style.width = `${racerHeight}px`;
       racer.style.height = `${racerHeight}px`;
+      racer.style.overflow = "hidden";
       racerContainer.appendChild(nameBubble);
       racerContainer.appendChild(racer);
       raceTrack.appendChild(racerContainer);
