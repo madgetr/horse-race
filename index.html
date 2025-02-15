@@ -25,6 +25,10 @@
           <div class="col">
             <label for="raceSpeed">Speed</label><input type="range" class="form-range" id="raceSpeed" min="1" max="10"
                                                        step="1" value="5">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="racersHop" checked>
+              <label class="form-check-label" for="racersHop">Racers Hop</label>
+            </div>
             <label for="backgroundImage">Background Image</label><input type="text" class="form-control"
                                                                         id="backgroundImage" value=""
                                                                         onchange="newRace()">
@@ -80,10 +84,12 @@
     let raceSpeed = document.getElementById("raceSpeed").value;
     let backgroundImage = document.getElementById("backgroundImage").value;
     let racerImage = document.getElementById("racerImage").value;
+    let racersHop = document.getElementById("racersHop").checked;
     localStorage.setItem("participants", participants);
     localStorage.setItem("raceSpeed", raceSpeed);
     localStorage.setItem("backgroundImage", backgroundImage);
     localStorage.setItem("racerImage", racerImage);
+    localStorage.setItem("racersHop", racersHop);
   }
 
   function loadFieldValues() {
@@ -91,6 +97,7 @@
     let raceSpeed = localStorage.getItem("raceSpeed");
     let backgroundImage = localStorage.getItem("backgroundImage");
     let racerImage = localStorage.getItem("racerImage");
+    let racersHop = localStorage.getItem("racersHop");
     if (participants) {
       document.getElementById("participants").value = participants;
     }
@@ -102,6 +109,9 @@
     }
     if (racerImage) {
       document.getElementById("racerImage").value = racerImage;
+    }
+    if (racersHop) {
+      document.getElementById("racersHop").checked = racersHop;
     }
   }
 
@@ -203,7 +213,7 @@
           racer.position += racer.speed * 0.5 * (document.getElementById("raceSpeed").value / 5);
           racer.element.style.left = `${racer.position}px`;
           racer.element.style.top = `${(racer.yoffset + racer.bounce)}px`;
-          racer.bounce = Math.max(Math.sin(racer.position / 10) * racer.speed / 5) * 10;
+          racer.bounce = Math.max(Math.sin(racer.position / 10) * racer.speed / 5) * 10 * (document.getElementById("racersHop").checked ? 1 : 0)
           racer.element.style.filter = `drop-shadow(0px 2px 4px rgba(0, 0, 0, 1))`;
           if (!winner) {
             if (racer.position >= raceTrack.clientWidth - 30) {
