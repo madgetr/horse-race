@@ -15,7 +15,7 @@
             aria-expanded="false" aria-controls="collapseEdit">
       Edit
     </button>
-    <button class="btn btn-outline-secondary me-2" type="button" data-bs-toggle="modal" data-bs-target="#openModal">
+    <button class="btn btn-outline-warning me-2" type="button" data-bs-toggle="modal" data-bs-target="#openModal">
       Open
     </button>
   </form>
@@ -201,7 +201,7 @@ Name2
       localStorage.setItem("savedRaces", JSON.stringify(savedRaces));
     }
     loadFieldValues();
-  //   collapse the edit menu
+    //   collapse the edit menu
     collapseEdit.hide();
   }
 
@@ -215,7 +215,6 @@ Name2
   }
 
   function newRace() {
-    saveRace();
     deleteRace();
     showRace();
   }
@@ -251,7 +250,7 @@ Name2
       racerContainer.style.position = "absolute";
       racerContainer.style.left = "0px";
       // evently space the racers across raceTrack.style.height
-      let racerSpacing = (raceTrack.clientHeight - 140) / (participants.length + 1);
+      let racerSpacing = (raceTrack.clientHeight - 100) / (participants.length + 1);
       let racerHeight = Math.max(racerSpacing, 120);
       racerContainer.style.top = `${(index + 1) * racerSpacing}px`;
       racerContainer.style.display = "flex";
@@ -291,6 +290,7 @@ Name2
 
     function startRace() {
       startButton.remove();
+      shuffleButton.remove();
       interval = setInterval(() => {
         racers.forEach(racer => {
 
@@ -326,6 +326,16 @@ Name2
     startButton.id = "startButton";
     startButton.onclick = startRace;
     document.getElementById("menu").appendChild(startButton);
+    const shuffleButton = document.createElement("button");
+    shuffleButton.innerText = "Shuffle";
+    shuffleButton.className = "btn btn-outline-secondary me-2";
+    shuffleButton.onclick = () => {
+      participants.sort(() => Math.random() - 0.5);
+      document.getElementById("participants").value = participants.join("\n");
+      newRace();
+    };
+    shuffleButton.id = "shuffleButton";
+    document.getElementById("menu").appendChild(shuffleButton);
   }
 
   function deleteRace() {
@@ -336,6 +346,10 @@ Name2
     let oldStartButton = document.getElementById("startButton");
     if (oldStartButton) {
       oldStartButton.remove();
+    }
+    let oldShuffleButton = document.getElementById("shuffleButton");
+    if (oldShuffleButton) {
+      oldShuffleButton.remove();
     }
   }
 </script>
