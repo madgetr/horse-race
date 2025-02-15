@@ -9,110 +9,200 @@
   <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
 </head>
 <body class="container-xxl my-md-4 bd-layout">
-<nav class="bd-subnavbar py-2" aria-label="Secondary navigation">
-  <div class="container-xxl d-flex align-items-md-center" id="menu">
-    <button class="btn btn-outline-primary btn-lg fs-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit"
+<nav class="navbar navbar-dark bg-dark">
+  <form class="container-fluid justify-content-start" id="menu">
+    <button class="btn btn-outline-primary me-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit"
             aria-expanded="false" aria-controls="collapseEdit">
-      Edit Race
+      Edit
     </button>
-
-  </div>
-  <!--particpants input box-->
-  <div class="collapse" id="collapseEdit">
-    <div class="card card-body">
-      <div class="container">
-        <div class="row align-items-start">
-          <div class="col">
-            <label for="raceSpeed">Speed</label><input type="range" class="form-range" id="raceSpeed" min="1" max="10"
-                                                       step="1" value="5">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" role="switch" id="racersHop" checked>
-              <label class="form-check-label" for="racersHop">Racers Hop</label>
-            </div>
-            <label for="backgroundImage">Background Image</label><input type="text" class="form-control"
-                                                                        id="backgroundImage" value=""
-                                                                        onchange="newRace()">
-            <label for="racerImage">Racer Image</label><input type="text" class="form-control"
-                                                                        id="racerImage" value=""
-                                                                        onchange="newRace()">
-          </div>
-          <div class="col">
-            <label for="raceTitle">Title</label><input type="text" class="form-control" id="raceTitle">
-            <label>Participants</label>
-            <textarea id="participants" class="form-control" rows="3" aria-label="Participants" onchange="newRace()"></textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <button class="btn btn-outline-secondary me-2" type="button" data-bs-toggle="modal" data-bs-target="#openModal">
+      Open
+    </button>
+  </form>
 </nav>
-<main class="bd-main order-1">
-<div style="margin-left: auto; margin-right: auto; margin-top: 50px" id="main" class="container-fluid mb-3">
-  <!-- Modal -->
-  <div class="modal fade" id="winnerModal" tabindex="-1" aria-labelledby="winnerModalLabel" aria-hidden="true"
-       style="margin-top: 10%">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="winnerModalLabel">Winner</h5>
-          <button type="button" class="btn-close fs-3" data-bs-dismiss="modal" aria-label="Close"
-                  onclick="newRace()"></button>
+<!--particpants input box-->
+<div class="collapse" id="collapseEdit">
+  <div class="card card-body">
+    <div class="container">
+      <div class="row align-items-start">
+        <div class="col">
+          <label for="raceSpeed">Speed</label><input type="range" class="form-range" id="raceSpeed" min="1" max="10"
+                                                     step="1" value="5">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="racersHop" onchange="newRace()">
+            <label class="form-check-label" for="racersHop">Racers Hop</label>
+          </div>
+          <label for="backgroundImage">Background Image</label><input type="text" class="form-control"
+                                                                      id="backgroundImage" value=""
+                                                                      onchange="newRace()">
+          <label for="racerImage">Racer Image</label><input type="text" class="form-control"
+                                                            id="racerImage" value=""
+                                                            onchange="newRace()">
         </div>
-        <h2 class="modal-body" id="winnerBody" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-          ...
-        </h2>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary fs-3" data-bs-dismiss="modal" onclick="newRace()">Reset</button>
-          <button type="button" class="btn btn-primary fs-3" data-bs-dismiss="modal"
-                  onclick="removeWinnerFromParticipants()">Remove
-          </button>
+        <div class="col">
+          <label for="raceTitle">Name</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="raceTitle" placeholder="Title For Race...">
+            <button class="btn btn-outline-success" type="button" id="button-addon2" onclick="saveRace()">Save
+            </button>
+          </div>
+          <label>Participants</label>
+          <textarea id="participants" class="form-control" rows="3" aria-label="Participants"
+                    onchange="newRace()" placeholder="Name1
+Name2
+..."></textarea>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<main class="bd-main order-1">
+  <h2 class="text-center mx-0" id="raceHeader"></h2>
+  <div style="margin-left: auto; margin-right: auto;" id="main" class="container-fluid mb-3">
+    <!-- Winner Modal -->
+    <div class="modal fade" id="winnerModal" tabindex="-1" aria-labelledby="winnerModalLabel" aria-hidden="true"
+         style="margin-top: 10%">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="winnerModalLabel">Winner</h5>
+            <button type="button" class="btn-close fs-3" data-bs-dismiss="modal" aria-label="Close"
+                    onclick="newRace()"></button>
+          </div>
+          <h2 class="modal-body" id="winnerBody"
+              style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            ...
+          </h2>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="newRace()">Reset</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                    onclick="removeWinnerFromParticipants()">Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Open Modal -->
+    <div class="modal fade" id="openModal" tabindex="-1" aria-labelledby="openModalLabel" aria-hidden="true"
+         style="margin-top: 10%">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="openModalLabel">Open Saved Race</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    onclick="newRace()"></button>
+          </div>
+          <!--        scrollable modal body-->
+          <div class="modal-body" style="max-height: 30vh; overflow-y: auto;">
+            <div class="list-group" id="selectRace">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 </body>
 <script>
   const jsConfetti = new JSConfetti()
   const winnerModal = new bootstrap.Modal(document.getElementById('winnerModal'));
-  loadFieldValues();
-  newRace();
+  const openModal = new bootstrap.Modal(document.getElementById('openModal'));
+  const collapseEdit = new bootstrap.Collapse(document.getElementById("collapseEdit"));
+  setup();
 
-  function saveFieldValues() {
-    let participants = document.getElementById("participants").value;
-    let raceSpeed = document.getElementById("raceSpeed").value;
-    let backgroundImage = document.getElementById("backgroundImage").value;
-    let racerImage = document.getElementById("racerImage").value;
-    let racersHop = document.getElementById("racersHop").checked;
-    localStorage.setItem("participants", participants);
-    localStorage.setItem("raceSpeed", raceSpeed);
-    localStorage.setItem("backgroundImage", backgroundImage);
-    localStorage.setItem("racerImage", racerImage);
-    localStorage.setItem("racersHop", racersHop);
+
+  function setup() {
+    loadFieldValues();
+    newRace();
+    let savedRaces = localStorage.getItem("savedRaces");
+    if (savedRaces === null || savedRaces === '[]') {
+      localStorage.setItem("savedRaces", JSON.stringify([]));
+      collapseEdit.show();
+    } else {
+      collapseEdit.hide();
+      openModal.show();
+    }
+
+  }
+  function loadFieldValues() {
+    let savedRaces = JSON.parse(localStorage.getItem("savedRaces")) || [];
+    let selectRaceEl = document.getElementById("selectRace");
+    selectRaceEl.innerHTML = "";
+    for (let i = 0; i < savedRaces.length; i++) {
+      let raceTitle = savedRaces[i];
+      let inputGroup = document.createElement("div");
+        inputGroup.className = "input-group mb-3";
+      let raceButton = document.createElement("button");
+      raceButton.className = "btn list-group-item list-group-item"
+      raceButton.innerText = raceTitle;
+      raceButton.onclick = () => selectRace(raceTitle);
+      raceButton.style.textOverflow = "hidden";
+      raceButton.style.width = "80%";
+      let deleteButton = document.createElement("button");
+        deleteButton.className = "btn btn-outline-danger btn-addon";
+        deleteButton.innerText = "Delete";
+        deleteButton.style.width = "20%";
+        deleteButton.onclick = (event) => {
+          event.stopPropagation();
+          localStorage.removeItem(raceTitle);
+          let savedRaces = JSON.parse(localStorage.getItem("savedRaces")) || [];
+          savedRaces = savedRaces.filter(title => title !== raceTitle);
+          localStorage.setItem("savedRaces", JSON.stringify(savedRaces));
+          loadFieldValues();
+        };
+      inputGroup.appendChild(raceButton);
+      inputGroup.appendChild(deleteButton);
+
+      selectRaceEl.appendChild(inputGroup)
+
+    }
+    let raceTitle = document.getElementById("raceTitle").value;
+    let raceHeader = document.getElementById("raceHeader");
+    raceHeader.innerText = raceTitle;
+    if (!raceTitle) return;
+
+    let raceData = JSON.parse(localStorage.getItem(raceTitle));
+
+    if (raceData) {
+      document.getElementById("participants").value = raceData.participants || "";
+      document.getElementById("raceSpeed").value = raceData.raceSpeed || "";
+      document.getElementById("backgroundImage").value = raceData.backgroundImage || "";
+      document.getElementById("racerImage").value = raceData.racerImage || "";
+      document.getElementById("racersHop").checked = raceData.racersHop || false;
+    }
   }
 
-  function loadFieldValues() {
-    let participants = localStorage.getItem("participants");
-    let raceSpeed = localStorage.getItem("raceSpeed");
-    let backgroundImage = localStorage.getItem("backgroundImage");
-    let racerImage = localStorage.getItem("racerImage");
-    let racersHop = localStorage.getItem("racersHop");
-    if (participants) {
-      document.getElementById("participants").value = participants;
+  function selectRace(raceTitle) {
+    document.getElementById("raceTitle").value = raceTitle;
+    openModal.hide();
+    loadFieldValues();
+    newRace();
+  }
+
+  function saveRace() {
+    let raceTitle = document.getElementById("raceTitle").value;
+    if (!raceTitle) return;
+
+    let raceData = {
+      participants: document.getElementById("participants").value,
+      raceSpeed: document.getElementById("raceSpeed").value,
+      backgroundImage: document.getElementById("backgroundImage").value,
+      racerImage: document.getElementById("racerImage").value,
+      racersHop: document.getElementById("racersHop").checked
+    };
+
+    localStorage.setItem(raceTitle, JSON.stringify(raceData));
+
+    let savedRaces = JSON.parse(localStorage.getItem("savedRaces")) || [];
+    if (!savedRaces.includes(raceTitle)) {
+      savedRaces.push(raceTitle);
+      localStorage.setItem("savedRaces", JSON.stringify(savedRaces));
     }
-    if (raceSpeed) {
-      document.getElementById("raceSpeed").value = raceSpeed;
-    }
-    if (backgroundImage) {
-      document.getElementById("backgroundImage").value = backgroundImage;
-    }
-    if (racerImage) {
-      document.getElementById("racerImage").value = racerImage;
-    }
-    if (racersHop) {
-      document.getElementById("racersHop").checked = racersHop;
-    }
+    loadFieldValues();
+  //   collapse the edit menu
+    collapseEdit.hide();
   }
 
   function removeWinnerFromParticipants() {
@@ -125,7 +215,7 @@
   }
 
   function newRace() {
-    saveFieldValues();
+    saveRace();
     deleteRace();
     showRace();
   }
@@ -141,7 +231,7 @@
     }
     raceTrack.style.position = "relative";
     raceTrack.style.width = "100%";
-    raceTrack.style.height = "80vh";
+    raceTrack.style.height = "75vh";
     raceTrack.style.border = "1px solid black";
 
     raceTrack.id = "raceTrack";
@@ -213,7 +303,8 @@
           racer.position += racer.speed * 0.5 * (document.getElementById("raceSpeed").value / 5);
           racer.element.style.left = `${racer.position}px`;
           racer.element.style.top = `${(racer.yoffset + racer.bounce)}px`;
-          racer.bounce = Math.max(Math.sin(racer.position / 10) * racer.speed / 5) * 10 * (document.getElementById("racersHop").checked ? 1 : 0)
+          racer.bounce = Math.max(Math.sin(racer.position / 10) * racer.speed / 5) * 10 *
+              (document.getElementById("racersHop").checked ? 1 : 0)
           racer.element.style.filter = `drop-shadow(0px 2px 4px rgba(0, 0, 0, 1))`;
           if (!winner) {
             if (racer.position >= raceTrack.clientWidth - 30) {
@@ -230,7 +321,7 @@
 
     const startButton = document.createElement("button");
     startButton.innerText = "Start Race";
-    startButton.className = "btn btn-outline-success btn-lg fs-3";
+    startButton.className = "btn btn-outline-success me-2";
     startButton.id = "startButton";
     startButton.onclick = startRace;
     document.getElementById("menu").appendChild(startButton);
