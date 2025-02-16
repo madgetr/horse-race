@@ -13,10 +13,9 @@
 <div class="justify-content-center fixed-bottom">
 <nav class="navbar navbar-dark bg-dark">
   <form class="container-fluid justify-content-start" id="menu">
-    <button class="btn btn-outline-primary me-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit"
-            aria-expanded="false" aria-controls="collapseEdit">
-      Edit
-    </button>
+    <input type="checkbox" class="btn-check" id="btn-check" checked autocomplete="off" data-bs-toggle="collapse" data-bs-target="#collapseEdit"
+           aria-expanded="false" aria-controls="collapseEdit">
+    <label class="btn btn-outline-primary me-2" for="btn-check">Edit</label>
     <button class="btn btn-outline-warning me-2" type="button" data-bs-toggle="modal" data-bs-target="#openModal">
       Open
     </button>
@@ -54,6 +53,11 @@
 Name2
 ..."></textarea>
         </div>
+        <!--add credit here-->
+        <footer class="text-center">
+          <br>
+          <p>Created by <a href="https://github.com/madgetr">Trevor Madge</a></p>
+        </footer>
       </div>
     </div>
   </div>
@@ -88,7 +92,7 @@ Name2
 
     <!-- Open Modal -->
     <div class="modal fade" id="openModal" tabindex="-1" aria-labelledby="openModalLabel" aria-hidden="true"
-         style="margin-top: 10%">
+         style="margin-top: 10vh">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -97,7 +101,7 @@ Name2
                     onclick="newRace()"></button>
           </div>
           <!--        scrollable modal body-->
-          <div class="modal-body" style="max-height: 30vh; overflow-y: auto;">
+          <div class="modal-body" style="max-height: 50vh; overflow-y: auto;">
             <div class="list-group" id="selectRace">
             </div>
           </div>
@@ -370,9 +374,4 @@ Name2
     }
   }
 </script>
-<!--add credit here-->
-<footer class="text-center">
-  <br>
-  <p>Created by <a href="https://github.com/madgetr">Trevor Madge</a></p>
-</footer>
 </html>
