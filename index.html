@@ -11,57 +11,58 @@
 </head>
 <body class="container-xxl my-md-4 bd-layout">
 <div class="justify-content-center fixed-bottom">
-<nav class="navbar navbar-dark bg-dark">
-  <form class="container-fluid justify-content-start" id="menu">
-    <input type="checkbox" class="btn-check" id="btn-check" checked autocomplete="off" data-bs-toggle="collapse" data-bs-target="#collapseEdit"
-           aria-expanded="false" aria-controls="collapseEdit">
-    <label class="btn btn-outline-primary me-2" for="btn-check">Edit</label>
-    <button class="btn btn-outline-warning me-2" type="button" data-bs-toggle="modal" data-bs-target="#openModal">
-      Open
-    </button>
-  </form>
-</nav>
-<!--particpants input box-->
-<div class="collapse" id="collapseEdit">
-  <div class="card card-body">
-    <div class="container">
-      <div class="row align-items-start">
-        <div class="col">
-          <label for="raceSpeed">Speed</label><input type="range" class="form-range" id="raceSpeed" min="1" max="10"
-                                                     step="1" value="5">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="racersHop" onchange="newRace()">
-            <label class="form-check-label" for="racersHop">Racers Hop</label>
+  <nav class="navbar navbar-dark bg-dark">
+    <form class="container-fluid justify-content-start" id="menu">
+      <input type="checkbox" class="btn-check" id="btn-check" checked autocomplete="off" data-bs-toggle="collapse"
+             data-bs-target="#collapseEdit"
+             aria-expanded="false" aria-controls="collapseEdit">
+      <label class="btn btn-outline-primary me-2" for="btn-check">Edit</label>
+      <button class="btn btn-outline-warning me-2" type="button" data-bs-toggle="modal" data-bs-target="#openModal">
+        Open
+      </button>
+    </form>
+  </nav>
+  <!--particpants input box-->
+  <div class="collapse" id="collapseEdit">
+    <div class="card card-body">
+      <div class="container">
+        <div class="row align-items-start">
+          <div class="col">
+            <label for="raceSpeed">Speed</label><input type="range" class="form-range" id="raceSpeed" min="1" max="10"
+                                                       step="1" value="5">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="racersHop" onchange="newRace()">
+              <label class="form-check-label" for="racersHop">Racers Hop</label>
+            </div>
+            <label for="backgroundImage">Background Image</label><input type="text" class="form-control"
+                                                                        id="backgroundImage" value=""
+                                                                        onchange="newRace()">
+            <label for="racerImage">Racer Image</label><input type="text" class="form-control"
+                                                              id="racerImage" value=""
+                                                              onchange="newRace()">
           </div>
-          <label for="backgroundImage">Background Image</label><input type="text" class="form-control"
-                                                                      id="backgroundImage" value=""
-                                                                      onchange="newRace()">
-          <label for="racerImage">Racer Image</label><input type="text" class="form-control"
-                                                            id="racerImage" value=""
-                                                            onchange="newRace()">
-        </div>
-        <div class="col">
-          <label for="raceTitle">Name</label>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" id="raceTitle" placeholder="Title For Race...">
-            <button class="btn btn-outline-success" type="button" id="button-addon2" onclick="saveRace()">Save
-            </button>
-          </div>
-          <label>Participants</label>
-          <textarea id="participants" class="form-control" rows="3" aria-label="Participants"
-                    onchange="newRace()" placeholder="Name1
+          <div class="col">
+            <label for="raceTitle">Name</label>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" id="raceTitle" placeholder="Title For Race...">
+              <button class="btn btn-outline-success" type="button" id="button-addon2" onclick="saveRace()">Save
+              </button>
+            </div>
+            <label>Participants</label>
+            <textarea id="participants" class="form-control" rows="3" aria-label="Participants"
+                      onchange="newRace()" placeholder="Name1
 Name2
 ..."></textarea>
+          </div>
+          <!--add credit here-->
+          <footer class="text-center">
+            <br>
+            <p>Created by <a href="https://github.com/madgetr">Trevor Madge</a></p>
+          </footer>
         </div>
-        <!--add credit here-->
-        <footer class="text-center">
-          <br>
-          <p>Created by <a href="https://github.com/madgetr">Trevor Madge</a></p>
-        </footer>
       </div>
     </div>
   </div>
-</div>
 </div>
 <main class="bd-main order-1">
   <h2 class="text-center mx-0" id="raceHeader"></h2>
@@ -129,8 +130,6 @@ Name2
   const openModal = new bootstrap.Modal(document.getElementById('openModal'));
   const collapseEdit = new bootstrap.Collapse(document.getElementById("collapseEdit"));
   const toastBootstrap = bootstrap.Toast.getOrCreateInstance(document.getElementById('liveToast'));
-  setup();
-
 
   function setup() {
     loadFieldValues();
@@ -139,12 +138,25 @@ Name2
     if (savedRaces === null || savedRaces === '[]') {
       localStorage.setItem("savedRaces", JSON.stringify([]));
       collapseEdit.show();
-    } else {
-      collapseEdit.hide();
-      openModal.show();
     }
-
+    else {
+      if (document.getElementById("raceTitle").value === "") {
+        collapseEdit.hide();
+        openModal.show();
+      }
+    }
   }
+
+  function setFieldsFromRaceData(raceData) {
+    if (raceData) {
+      document.getElementById("participants").value = raceData.participants || "";
+      document.getElementById("raceSpeed").value = raceData.raceSpeed || "";
+      document.getElementById("backgroundImage").value = raceData.backgroundImage || "";
+      document.getElementById("racerImage").value = raceData.racerImage || "";
+      document.getElementById("racersHop").checked = raceData.racersHop || false;
+    }
+  }
+
   function loadFieldValues() {
     let savedRaces = JSON.parse(localStorage.getItem("savedRaces")) || [];
     let selectRaceEl = document.getElementById("selectRace");
@@ -152,7 +164,7 @@ Name2
     for (let i = 0; i < savedRaces.length; i++) {
       let raceTitle = savedRaces[i];
       let inputGroup = document.createElement("div");
-        inputGroup.className = "input-group mb-3";
+      inputGroup.className = "input-group mb-3";
       let raceButton = document.createElement("button");
       raceButton.className = "btn list-group-item list-group-item"
       raceButton.innerText = raceTitle;
@@ -160,17 +172,17 @@ Name2
       raceButton.style.textOverflow = "hidden";
       raceButton.style.width = "80%";
       let deleteButton = document.createElement("button");
-        deleteButton.className = "btn btn-outline-danger btn-addon";
-        deleteButton.innerText = "Delete";
-        deleteButton.style.width = "20%";
-        deleteButton.onclick = (event) => {
-          event.stopPropagation();
-          localStorage.removeItem(raceTitle);
-          let savedRaces = JSON.parse(localStorage.getItem("savedRaces")) || [];
-          savedRaces = savedRaces.filter(title => title !== raceTitle);
-          localStorage.setItem("savedRaces", JSON.stringify(savedRaces));
-          loadFieldValues();
-        };
+      deleteButton.className = "btn btn-outline-danger btn-addon";
+      deleteButton.innerText = "Delete";
+      deleteButton.style.width = "20%";
+      deleteButton.onclick = (event) => {
+        event.stopPropagation();
+        localStorage.removeItem(raceTitle);
+        let savedRaces = JSON.parse(localStorage.getItem("savedRaces")) || [];
+        savedRaces = savedRaces.filter(title => title !== raceTitle);
+        localStorage.setItem("savedRaces", JSON.stringify(savedRaces));
+        loadFieldValues();
+      };
       inputGroup.appendChild(raceButton);
       inputGroup.appendChild(deleteButton);
 
@@ -184,12 +196,26 @@ Name2
 
     let raceData = JSON.parse(localStorage.getItem(raceTitle));
 
-    if (raceData) {
-      document.getElementById("participants").value = raceData.participants || "";
-      document.getElementById("raceSpeed").value = raceData.raceSpeed || "";
-      document.getElementById("backgroundImage").value = raceData.backgroundImage || "";
-      document.getElementById("racerImage").value = raceData.racerImage || "";
-      document.getElementById("racersHop").checked = raceData.racersHop || false;
+    setFieldsFromRaceData(raceData);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    loadRaceFromUrlParameter();
+    setup();
+  });
+
+  function loadRaceFromUrlParameter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let raceDataParam = urlParams.get('raceData');
+    if (raceDataParam) {
+      let raceData = JSON.parse(atob(raceDataParam));
+      setFieldsFromRaceData(raceData);
+    }
+    let raceTitleParam = urlParams.get("raceTitle");
+    if (raceTitleParam) {
+      document.getElementById("raceTitle").value = raceTitleParam;
+      collapseEdit.hide();
+      openModal.hide();
     }
   }
 
@@ -200,18 +226,21 @@ Name2
     newRace();
   }
 
-  function saveRace() {
-    let raceTitle = document.getElementById("raceTitle").value;
-    if (!raceTitle) return;
-
-    let raceData = {
-      participants: document.getElementById("participants").value,
+  function getRaceData() {
+    return {
       raceSpeed: document.getElementById("raceSpeed").value,
       backgroundImage: document.getElementById("backgroundImage").value,
       racerImage: document.getElementById("racerImage").value,
       racersHop: document.getElementById("racersHop").checked
     };
+  }
 
+  function saveRace() {
+    let raceTitle = document.getElementById("raceTitle").value;
+    if (!raceTitle) return;
+
+    let raceData = getRaceData();
+    raceData.participants = document.getElementById("participants").value;
     localStorage.setItem(raceTitle, JSON.stringify(raceData));
 
     let savedRaces = JSON.parse(localStorage.getItem("savedRaces")) || [];
@@ -224,6 +253,14 @@ Name2
     let toastBody = document.getElementById("toast-body");
     toastBody.innerText = `${raceTitle} saved`;
     toastBootstrap.show();
+    setUrlParameter();
+  }
+
+  function setUrlParameter() {
+    let url = new URL(window.location.href);
+    url.searchParams.set("raceData", btoa(JSON.stringify(getRaceData())));
+    url.searchParams.set("raceTitle", document.getElementById("raceTitle").value);
+    window.history.pushState({}, "", url);
   }
 
   function removeWinnerFromParticipants() {
@@ -236,6 +273,7 @@ Name2
   }
 
   function newRace() {
+    setUrlParameter();
     deleteRace();
     showRace();
   }
